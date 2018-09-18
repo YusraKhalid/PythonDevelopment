@@ -58,3 +58,6 @@ target/
 
 # VSCode
 .vscode
+
+#pycache
+orsay/__pycache__/
