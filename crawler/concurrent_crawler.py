@@ -5,7 +5,7 @@ from parsel import Selector
 
 
 BASE_URL = 'https://en.wikipedia.org/wiki/SOLRAD_2'
-DOMAIN_URL = ' '
+DOMAIN_URL = 'https://www.wikipedia.org'
 bytes_downloaded = 0
 
 
@@ -17,11 +17,11 @@ def make_request(url):
 
 def extract_urls(page_html, max_urls):    
     selector = Selector(text=page_html.text) 
-    absolute_urls = selector.xpath('//a[contains(@href, "://")]/@href').getall()
+    absolute_urls = selector.xpath('//a[contains(@href, "http")]/@href').getall()
     relative_urls = selector.xpath('//a[starts-with(@href, "/wiki")]/@href').getall()
 
-    relative_urls_complete = list(map(lambda url: DOMAIN_URL + url, relative_urls))
-    absolute_urls.extend(relative_urls_complete)
+    domain_urls = list(map(lambda url: DOMAIN_URL + url, relative_urls))
+    absolute_urls.extend(domain_urls)
 
     return absolute_urls[:max_urls]
 
@@ -58,7 +58,6 @@ async def main():
         request_counter += 1 
 
     print_report(bytes_downloaded, request_counter)
-
 
 if __name__ == "__main__":
     asyncio.run(main())
